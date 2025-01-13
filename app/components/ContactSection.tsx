@@ -1,18 +1,25 @@
-'use client';
+'use client'
 
 import React, { useState } from 'react';
 import { EnvelopeIcon, PhoneIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import emailjs from 'emailjs-com';
 
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+  [key: string]: string; // Index signature to allow any additional keys with string values
+}
+
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: ''
   });
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<string>('');
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -20,14 +27,14 @@ export default function ContactSection() {
     }));
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const serviceID = 'service_1t0viza';
     const templateID = 'template_g0m21ul';
     const userID = 'NGYHX7OALCIG4c2cH';
 
-    emailjs.send(serviceID, templateID, formData, userID)
+    emailjs.send(serviceID, templateID, formData, userID)  // No need for casting now
       .then(() => {
         setStatus('Message sent successfully!');
         setFormData({
